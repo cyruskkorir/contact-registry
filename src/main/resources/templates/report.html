@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Contact Report</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Contact Report</h1>
+    <form method="get" action="/api/contacts/report">
+        <label for="county">Filter by County:</label>
+        <select name="county" id="county">
+            <option value="" th:selected="${selectedCounty == null}">All</option>
+            <option value="Nairobi" th:selected="${selectedCounty == 'Nairobi'}">Nairobi</option>
+            <option value="Mombasa" th:selected="${selectedCounty == 'Mombasa'}">Mombasa</option>
+            <option value="Kisumu" th:selected="${selectedCounty == 'Kisumu'}">Kisumu</option>
+            <option value="Nakuru" th:selected="${selectedCounty == 'Nakuru'}">Nakuru</option>
+            <option value="Eldoret" th:selected="${selectedCounty == 'Eldoret'}">Eldoret</option>
+        </select>
+        <button type="submit">Filter</button>
+    </form>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>County</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="contact : ${contacts}">
+                <td th:text="${contact.fullName}"></td>
+                <td th:text="${contact.emailAddress}"></td>
+                <td th:text="${contact.phoneNumber}"></td>
+                <td th:text="${contact.countyOfResidence}"></td>
+            </tr>
+        </tbody>
+    </table>
+    <button onclick="window.print()">Print Report</button>
+</body>
+</html>

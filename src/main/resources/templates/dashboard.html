@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #333;
+        }
+        .container {
+            width: 90%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .chart-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+        .chart {
+            width: 300px; /* Set a fixed width for the charts */
+            height: 350px; /* Adjust height to accommodate the title */
+            margin: 20px;
+            background: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column; /* Stack title and canvas vertically */
+            align-items: center; /* Center-align title and canvas */
+            justify-content: flex-start; /* Ensure title stays at the top */
+        }
+        .chart h2 {
+            margin: 0 0 10px 0; /* Add spacing below the title */
+            text-align: center; /* Center-align the title */
+        }
+        canvas {
+            width: 100%; /* Ensure the canvas fits within the chart container */
+            height: auto; /* Maintain aspect ratio */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Admin Dashboard</h1>
+    <div class="container">
+        <div class="chart-container">
+            <div class="chart">
+                <h2>Stats by Gender</h2>
+                <canvas id="genderChart"></canvas>
+            </div>
+            <div class="chart">
+                <h2>Stats by County</h2>
+                <canvas id="countyChart"></canvas>
+            </div>
+        </div>
+        <div>
+            <h2>Recently Added Contacts</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="contact : ${recentContacts}">
+                        <td th:text="${contact.fullName}"></td>
+                        <td th:text="${contact.emailAddress}"></td>
+                        <td th:text="${contact.phoneNumber}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script th:inline="javascript">
+        // Convert Thymeleaf map to JavaScript object
+        const genderStats = /*[[${genderStats}]]*/ {};
+        const countyStats = /*[[${countyStats}]]*/ {};
+
+        // Populate Gender Chart
+        const genderCtx = document.getElementById('genderChart').getContext('2d');
+        new Chart(genderCtx, {
+            type: 'pie',
+            data: {
+                labels: Object.keys(genderStats),
+                datasets: [{
+                    data: Object.values(genderStats),
+                    backgroundColor: ['#ffc0cb', '#0000ff'] // Colors for the pie chart
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true, // Maintain aspect ratio for smaller charts
+            }
+        });
+
+        // Populate County Chart
+        const countyCtx = document.getElementById('countyChart').getContext('2d');
+        new Chart(countyCtx, {
+            type: 'bar',
+            data: {
+                labels: Object.keys(countyStats),
+                datasets: [{
+                    backgroundColor: '#0000FF', // Color for the bar chart
+                    data: Object.values(countyStats)
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        display: false // Hide legend for bar chart
+                    }
+                },
+                responsive: true,
+                maintainAspectRatio: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Count'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'County'
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

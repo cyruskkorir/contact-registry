@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Admin Dashboard</h1>
+    <div>
+        <h2>Stats by Gender</h2>
+        <canvas id="genderChart"></canvas>
+    </div>
+    <div>
+        <h2>Stats by County</h2>
+        <canvas id="countyChart"></canvas>
+    </div>
+    <div>
+        <h2>Recently Added Contacts</h2>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Created At</th>
+                </tr>
+            </thead>
+            <tbody id="recentContactsTable"></tbody>
+        </table>
+    </div>
+    <script>
+        fetch('/api/contacts/dashboard-stats')
+            .then(response => response.json())
+            .then(data => {
+                // Populate Gender Chart
+                const genderCtx = document.getElementById('genderChart').getContext('2d');
+                new Chart(genderCtx, {
+                    type: 'pie',
+                    data: {
+                        labels: Object.keys(data.genderStats),
+                        datasets: [{
+                            data: Object.values(data.genderStats),
+                            backgroundColor: ['#FF6384', '#36A2EB']
+                        }]
+                    }
+                });
+
+                // Populate County Chart
+                const countyCtx = document.getElementById('countyChart').getContext('2d');
+                new Chart(countyCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: Object.keys(data.countyStats),
+                        datasets: [{
+                            data: Object.values(data.countyStats),
+                            backgroundColor: '#36A2EB'
+                        }]
+                    }
+                });
+
+                // Populate Recent Contacts Table
+                const tableBody = document.getElementById('recentContactsTable');
+                data.recentContacts.forEach(contact => {
+                    const row = `<tr>
+                        <td>${contact.name}</td>
+                        <td>${contact.email}</td>
+                        <td>${contact.phone}</td>
+                        <td>${contact.createdAt}</td>
+                    </tr>`;
+                    tableBody.innerHTML += row;
+                });
+            });
+    </script>
+</body>
+</html>
