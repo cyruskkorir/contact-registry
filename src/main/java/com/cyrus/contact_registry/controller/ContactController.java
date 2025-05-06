@@ -39,7 +39,7 @@ public class ContactController {
 
     @PostMapping
     @ResponseBody // Ensures the response is treated as JSON
-    public Contact createContact(@RequestBody Contact contact) {
+    public Contact saveContact(@RequestBody Contact contact) {
         return contactService.saveContact(contact);
     }
 

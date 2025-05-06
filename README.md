@@ -30,7 +30,7 @@ The Contact Registry Application is a Java-based web application built with Spri
 ## Setup Instructions
 1. **Clone the Repository**:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/cyruskkorir/contact-registry.git
    cd contact-registry
    ```
 

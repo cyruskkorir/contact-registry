@@ -103,6 +103,10 @@
                         <th>Name</th>
                         <th>Email</th>
                         <th>Phone</th>
+                        <th>Gender</th>
+                        <th>County</th>
+                        <th>ID Number</th>
+                        <th>Date Of Birth</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -110,6 +114,10 @@
                         <td th:text="${contact.fullName}"></td>
                         <td th:text="${contact.emailAddress}"></td>
                         <td th:text="${contact.phoneNumber}"></td>
+                        <td th:text="${contact.gender}"></td>
+                        <td th:text="${contact.countyOfResidence}"></td>
+                        <td th:text="${contact.idNumber}"></td>
+                        <td th:text="${#temporals.format(contact.dateOfBirth, 'yyyy-MM-dd')}"></td>
                     </tr>
                 </tbody>
             </table>

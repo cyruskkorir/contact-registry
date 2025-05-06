@@ -83,18 +83,22 @@
     <h1>Manage Contacts</h1>
     <div class="container">
         <form id="contactForm">
+            <h2>Add/Edit Contact</h2>
             <input type="hidden" id="contactId" name="id">
             <input type="text" id="fullName" name="fullName" placeholder="Full Name" required>
             <input type="email" id="emailAddress" name="emailAddress" placeholder="Email Address" required>
             <input type="text" id="phoneNumber" name="phoneNumber" placeholder="Phone Number" required>
             <input type="text" id="countyOfResidence" name="countyOfResidence" placeholder="County of Residence" required>
+            <input type="text" id="idNumber" name="idNumber" placeholder="ID Number" required>
             <div>
                 <label>Gender:</label>
                 <label><input type="radio" id="genderMale" name="gender" value="Male" required> Male</label>
                 <label><input type="radio" id="genderFemale" name="gender" value="Female" required> Female</label>
             </div>
-            <input type="text" name="idNumber" id="idNumber" placeholder="Id Number">
-            <input type="text" id="dateOfBirth" name="dateOfBirth" placeholder="Date of Birth (YYYY-MM-DD)" required>
+            <div>
+                <label for="student-birth-date">Date of birth:</label>
+                <input type="date" id="dateOfBirth" name="dateOfBirth"/>
+            </div>
             <button th:onclick="'saveContact()'" type="submit">Save Contact</button>
         </form>
         <table>
@@ -103,7 +107,9 @@
                     <th>Name</th>
                     <th>Email</th>
                     <th>Phone</th>
-                    <th>Actions</th>
+                    <th>County</th>
+                    <th>ID Number</th>
+                    <th>Date of Birth</th>
                 </tr>
             </thead>
             <tbody id="contactTableBody">
@@ -111,6 +117,9 @@
                     <td th:text="${contact.fullName}"></td>
                     <td th:text="${contact.emailAddress}"></td>
                     <td th:text="${contact.phoneNumber}"></td>
+                    <td th:text="${contact.countyOfResidence}"></td>
+                    <td th:text="${contact.idNumber}"></td>
+                    <td th:text="${#temporals.format(contact.dateOfBirth, 'yyyy-MM-dd')}"></td>
                     <td class="actions">
                         <button class="edit" th:onclick="'editContact(' + ${contact.id} + ')'">Edit</button> <!-- Pass numeric id -->
                         <button class="delete" th:onclick="'deleteContact(' + ${contact.id} + ')'">Delete</button> <!-- Pass numeric id -->
@@ -137,14 +146,37 @@
                 alert("County of Residence is required.");
                 return false;
             }
-            if (!contactData.gender || !["Male", "Female"].includes(contactData.gender.trim())) {
+            if (!contactData.gender ) {
                 alert("Gender must be either 'Male' or 'Female'.");
                 return false;
             }
-            if (!contactData.dateOfBirth || !/^\d{4}-\d{2}-\d{2}$/.test(contactData.dateOfBirth)) {
-                alert("Date of Birth must be in the format YYYY-MM-DD.");
+            if (!contactData.dateOfBirth) {
+                alert("Date of Birth is required.");
                 return false;
             }
+            console.log(contactData.dateOfBirth);
+            // Check if dateOfBirth is in YYYY-MM-DD format
+
+            // Validate date of birth is not earlier or later than today
+            const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
+            if (contactData.dateOfBirth < "1900-01-01") {
+                alert("Date of Birth must be a valid date after 1900.");
+                return false;
+            }
+            if (contactData.dateOfBirth > today) {
+                alert("Date of Birth must be today or earlier.");
+                return false;
+            }
+            if (!contactData.idNumber || contactData.idNumber.trim() === "") {
+                alert("ID Number is required.");
+                return false;
+            }
+            if (!/^\d{8}$/.test(contactData.idNumber)) {
+                alert("ID Number must be an 8-digit number.");
+                return false;
+            }
+            
+
             return true;
         }
 
@@ -187,6 +219,7 @@
             const countyOfResidence = document.getElementById('countyOfResidence').value;
             const gender = document.querySelector('input[name="gender"]:checked')?.value; // Get selected gender
             const dateOfBirth = document.getElementById('dateOfBirth').value;
+            const idNumber = document.getElementById('idNumber').value;
 
             const contactData = {
                 id: contactId,
@@ -195,7 +228,9 @@
                 phoneNumber: phoneNumber,
                 countyOfResidence: countyOfResidence,
                 gender: gender,
-                dateOfBirth: dateOfBirth
+                dateOfBirth: dateOfBirth,
+                idNumber: idNumber
+                
             };
 
             if (!validateInput(contactData)) {
