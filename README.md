@@ -46,6 +46,7 @@ The Contact Registry Application is a Java-based web application built with Spri
 
 3. **Build and Run the Application**:
    ```bash
+   mvn clean install
    mvn spring-boot:run
    ```
 
