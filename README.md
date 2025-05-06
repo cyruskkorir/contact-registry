@@ -25,7 +25,7 @@ The Contact Registry Application is a Java-based web application built with Spri
 ## Prerequisites
 - Java 17 or higher
 - Maven
-- MariaDB database server
+- MySQL database server
 
 ## Setup Instructions
 1. **Clone the Repository**:
@@ -35,11 +35,11 @@ The Contact Registry Application is a Java-based web application built with Spri
    ```
 
 2. **Configure the Database**:
-   - Ensure MariaDB is installed and running.
+   - Ensure MySQL is installed and running.
    - Create a database named `contact_registry`.
    - Update the `src/main/resources/application.properties` file with your database credentials:
      ```properties
-     spring.datasource.url=jdbc:mariadb://localhost:3306/contact_registry
+     spring.datasource.url=jdbc:mysql://localhost:3306/contact_registry
      spring.datasource.username=<your-username>
      spring.datasource.password=<your-password>
      ```

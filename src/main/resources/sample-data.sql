@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS contacts (
     id_number VARCHAR(50) NOT NULL,
     date_of_birth DATE NOT NULL,
     gender VARCHAR(10) NOT NULL,
-    county_of_residence VARCHAR(100) NOT NULL,
+    county_of_residence VARCHAR(100) NOT NULL
 );
 
 -- Insert sample data into the contacts table
